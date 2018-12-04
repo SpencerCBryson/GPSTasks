@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Button
 
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -22,17 +23,22 @@ class MainActivity : AppCompatActivity() {
     var locGranted = false
     val TAG = "GPSTasks-Main"
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        Log.d("nice", requestCode.toString() + resultCode.toString() + data.toString())
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
-
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
-
         getPerms()
+
+        val addButton = findViewById<Button>(R.id.mAddButton)
+        val deletebutton = findViewById<Button>(R.id.mDeleteButton)
+
+        addButton.setOnClickListener{
+            val intent = Intent(this, select_child::class.java)
+            startActivityForResult(intent, 1)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
