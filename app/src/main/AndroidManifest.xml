@@ -24,9 +24,9 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".select_child">
+        <activity android:name=".SelectChild">
         </activity>
-        <activity android:name=".new_task">
+        <activity android:name=".NewTask">
         </activity>
     </application>
 

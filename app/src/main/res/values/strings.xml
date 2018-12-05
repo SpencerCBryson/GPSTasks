@@ -5,4 +5,6 @@
     <string name="deletebutton">Delete</string>
     <string name="tasknamefiller">Task 1</string>
     <string name="taskmenutitle">Tasks</string>
+    <string name="configuretask">Configure Task</string>
+    <string name="configureaction">Configure Action</string>
 </resources>

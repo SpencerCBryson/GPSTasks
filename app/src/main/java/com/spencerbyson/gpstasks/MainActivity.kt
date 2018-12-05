@@ -3,11 +3,8 @@ package com.spencerbyson.gpstasks
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
-import android.provider.Settings
-import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity;
@@ -15,8 +12,6 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
-
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -36,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         val deletebutton = findViewById<Button>(R.id.mDeleteButton)
 
         addButton.setOnClickListener{
-            val intent = Intent(this, select_child::class.java)
+            val intent = Intent(this, SelectChild::class.java)
             startActivityForResult(intent, 1)
         }
     }
