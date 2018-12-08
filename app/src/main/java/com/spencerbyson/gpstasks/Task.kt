@@ -1,7 +1,11 @@
 package com.spencerbyson.gpstasks
 
-import android.location.Location
+class Task(val type : Int) {
 
-class Task {
-    var subTasks = ArrayList<Subtask>()
+    companion object {
+        val LOCATION_TASK = 1
+        val TIME_TASK = 2
+    }
+
 }
+
