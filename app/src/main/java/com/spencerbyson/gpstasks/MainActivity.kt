@@ -3,6 +3,7 @@ package com.spencerbyson.gpstasks
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
@@ -83,10 +84,14 @@ class MainActivity : AppCompatActivity() {
 
     // code to test our task service
     fun testingCode() {
-
         val intent = Intent(this, TaskService::class.java)
-        //todo: make task serializable and put extra in intent
 
+        //todo: fetch a location to test with
+        val testTask = Task()
+        //val locStep = LocStep(null)
+        //testTask.steps.add(locStep)
+
+        //todo: make task serializable and put extra in intent
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(intent)
         } else {

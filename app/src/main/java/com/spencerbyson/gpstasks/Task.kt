@@ -1,11 +1,13 @@
 package com.spencerbyson.gpstasks
 
-class Task(val type : Int) {
+import android.location.Location
+import android.util.Log
 
-    companion object {
-        val LOCATION_TASK = 1
-        val TIME_TASK = 2
+class Task {
+    val TAG = "GPSTasks-Task"
+    var steps = ArrayList<Step>()
+
+    fun updateLocation(loc : Location) {
+        Log.i(TAG, loc.toString())
     }
-
 }
-

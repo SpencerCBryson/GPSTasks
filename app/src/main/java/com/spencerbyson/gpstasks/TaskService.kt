@@ -16,15 +16,22 @@ import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationCompat.PRIORITY_MIN
 import android.util.Log
 import android.widget.Toast
+import android.R.attr.data
+
+
 
 class TaskService() : Service() {
 
     val TAG = "GPSTasks-TaskService"
 
     lateinit var locManager : LocationManager
+    lateinit var tasks : ArrayList<Task>
 
     fun updateLocation(loc : Location) {
         Log.i(TAG, loc.toString())
+        tasks.forEach {
+            it.updateLocation(loc)
+        }
     }
 
     val locListener = object : LocationListener {
@@ -45,6 +52,13 @@ class TaskService() : Service() {
         startForeground()
         setupLocListener()
     }
+
+
+//  TODO: set tasks arraylist from intent data
+//    override fun onStartCommand(intent: Intent, flags: Int, startId: Int) : Int {
+//        //data = (intent.extras!!.get("data") as String).toInt()
+//    }
+
 
     fun setupLocListener() {
         locManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
