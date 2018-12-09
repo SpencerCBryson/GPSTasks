@@ -12,7 +12,6 @@ class AddTask : AppCompatActivity() {
         setContentView(R.layout.activity_add_task)
 
         val addButton = findViewById<Button>(R.id.mAddButton)
-        val deleteButton = findViewById<Button>(R.id.mDeleteButton)
 
         addButton.setOnClickListener {
             val intent = Intent(this, AddSubtask::class.java)

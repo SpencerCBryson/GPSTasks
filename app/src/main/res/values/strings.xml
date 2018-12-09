@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">GPS Tasks</string>
     <string name="action_settings">Settings</string>
-    <string name="addbutton">Add</string>
+    <string name="addbutton">Add New</string>
     <string name="deletebutton">Delete</string>
     <string name="tasknamefiller">Task 1</string>
     <string name="taskmenutitle">Tasks</string>

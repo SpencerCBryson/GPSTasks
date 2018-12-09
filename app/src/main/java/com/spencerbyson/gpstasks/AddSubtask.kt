@@ -1,5 +1,6 @@
 package com.spencerbyson.gpstasks
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ArrayAdapter
@@ -23,12 +24,14 @@ class AddSubtask : AppCompatActivity() {
         task.adapter = aa1
 
         val aa2 = ArrayAdapter(this, android.R.layout.simple_spinner_item, actions)
+        action.adapter = aa2
 
         val configTaskButton = findViewById<Button>(R.id.mConfigureTaskButton)
         val configActButton = findViewById<Button>(R.id.mConfigureActionButton)
 
         configTaskButton.setOnClickListener{
-
+            val intent = Intent(this, Configure::class.java)
+            intent.putExtra("Task", task.selectedItemPosition.toString())
         }
 
         configActButton.setOnClickListener{

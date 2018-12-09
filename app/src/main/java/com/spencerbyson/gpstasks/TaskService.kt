@@ -27,11 +27,14 @@ class TaskService() : Service() {
     lateinit var locManager : LocationManager
     lateinit var tasks : ArrayList<Task>
 
+
     fun updateLocation(loc : Location) {
+        /*
         Log.i(TAG, loc.toString())
         tasks.forEach {
             it.updateLocation(loc)
         }
+        */
     }
 
     val locListener = object : LocationListener {

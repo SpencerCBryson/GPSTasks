@@ -8,10 +8,14 @@ import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.helper.ItemTouchHelper
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
+import android.widget.LinearLayout
 
 class Home : AppCompatActivity() {
 
@@ -27,9 +31,13 @@ class Home : AppCompatActivity() {
         setContentView(R.layout.activity_home)
         getPerms()
 
-        val addButton = findViewById<Button>(R.id.mAddButton)
-        val deletebutton = findViewById<Button>(R.id.mDeleteButton)
+        //TODO Change this to populate from the SQLite database of tasks.
+        val rvlist = arrayListOf("one", "two", "three", "four", "five", "six", "seven", "eight", "nine")
+        val rv = findViewById<RecyclerView>(R.id.mRecyclerView)
+        rv.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
+        rv.adapter = MainRecyclerAdapter(rvlist)
 
+        val addButton = findViewById<Button>(R.id.mAddButton)
         addButton.setOnClickListener{
             val intent = Intent(this, AddTask::class.java)
             startActivityForResult(intent, 1)
