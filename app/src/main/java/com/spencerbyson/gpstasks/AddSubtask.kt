@@ -6,7 +6,7 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
 
-class NewTask : AppCompatActivity() {
+class AddSubtask : AppCompatActivity() {
 
     //TODO Turn the tasks into real tasks, probably change these arrays into objects with tostrings so we can pass them without hardcoding?
     val tasks = arrayOf("Enter Area", "Reach Altitude", "Exit Area")
@@ -14,7 +14,7 @@ class NewTask : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_new_task)
+        setContentView(R.layout.activity_add_subtask)
 
         val task = findViewById<Spinner>(R.id.mSpinnerTask)
         val action = findViewById<Spinner>(R.id.mSpinnerAction)

@@ -3,7 +3,6 @@ package com.spencerbyson.gpstasks
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.Location
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
@@ -14,7 +13,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
 
-class MainActivity : AppCompatActivity() {
+class Home : AppCompatActivity() {
 
     var locGranted = false
     val TAG = "GPSTasks-Main"
@@ -25,14 +24,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_home)
         getPerms()
 
         val addButton = findViewById<Button>(R.id.mAddButton)
         val deletebutton = findViewById<Button>(R.id.mDeleteButton)
 
         addButton.setOnClickListener{
-            val intent = Intent(this, SelectChild::class.java)
+            val intent = Intent(this, AddTask::class.java)
             startActivityForResult(intent, 1)
         }
     }
