@@ -9,13 +9,20 @@ import kotlinx.android.parcel.RawValue
 class Task(var title : String, var steps : @RawValue ArrayList<Step>, var enabled : Boolean = true) : Parcelable {
     val TAG = "GPSTasks-Task"
 
+    lateinit var handler : TaskHandler
+    var id : Int = -1
+
     fun updateLocation(loc : Location) {
         steps.forEach {
-            if(it.type == LOCATION_STEP) {
-                val locStep = it as LocStep
-                if (locStep.predicate(loc)) {
-                    // location within target
-                    locStep.action()
+            if(!it.finished) {
+                when(it.type) {
+                    LOCATION_STEP -> {
+                        val locStep = it as LocStep
+                        if (locStep.predicate(loc)) {
+                            // location within target
+                            locStep.action()
+                        }
+                    }
                 }
             }
         }

@@ -14,21 +14,31 @@ import android.os.IBinder
 import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationCompat.PRIORITY_MIN
+import android.support.v4.content.LocalBroadcastManager
 import android.util.Log
 import android.widget.Toast
 
-class TaskService : Service() {
+class TaskService : Service(), TaskHandler {
 
     val TAG = "GPSTasks-TaskService"
 
     lateinit var locManager : LocationManager
     lateinit var tasks : ArrayList<Task>
+    lateinit var broadcaster : LocalBroadcastManager
 
     // sends new location to all tasks
     fun updateLocation(loc : Location) {
         tasks.forEach {
-            it.updateLocation(loc)
+            if(it.enabled) it.updateLocation(loc)
         }
+    }
+
+    override fun updateUI(taskId : Int) {
+        //TODO: update status of task/steps
+    }
+
+    fun updateTask(position : Int, task : Task) {
+        tasks[position] = task
     }
 
     // location listener that calls update location with a new location when available
@@ -49,10 +59,15 @@ class TaskService : Service() {
     override fun onCreate() {
         startForeground()
         setupLocListener()
+        broadcaster = LocalBroadcastManager.getInstance(this)
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int) : Int {
         tasks = intent.extras!!.get("TASKS") as ArrayList<Task>
+        tasks.forEachIndexed { index, task ->
+            task.handler = this
+            task.id = index
+        }
         return START_STICKY
     }
 

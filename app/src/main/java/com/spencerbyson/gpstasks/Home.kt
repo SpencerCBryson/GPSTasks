@@ -20,7 +20,7 @@ import android.widget.LinearLayout
 
 class Home : AppCompatActivity() {
 
-    var locGranted = false
+    var permsGranted = false
     val TAG = "GPSTasks-Main"
 
     lateinit var rv : RecyclerView
@@ -41,6 +41,8 @@ class Home : AppCompatActivity() {
         Log.d("nice", db.readSteps().toString())
         Log.d("nice", db.readStepTasks().toString())
 
+
+        // get permissions, all are required to make the app function correctly
         getPerms()
 
         rv = findViewById(R.id.mRecyclerView)
@@ -49,15 +51,13 @@ class Home : AppCompatActivity() {
 
         val addButton = findViewById<Button>(R.id.mAddButton)
         addButton.setOnClickListener{
-            val intent =    Intent(this, AddTask::class.java)
+            val intent = Intent(this, AddTask::class.java)
             startActivityForResult(intent, 1)
         }
 
 
-        if(locGranted)
+        if(permsGranted)
             testingCode()
-        else
-            return
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -80,17 +80,15 @@ class Home : AppCompatActivity() {
         if ((ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) &&
             (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED)) {
 
-            Log.i(TAG, "WARN missing perms")
-
+            Log.i(TAG, "[WARN] Requesting missing permissions")
             ActivityCompat.requestPermissions(
                 this,
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.SEND_SMS),
                 100
             )
         } else {
-            Log.i(TAG, "perms granted!")
-            locGranted = true
-            //testingCode()
+            Log.i(TAG, "[SUCCESS] Permissions granted")
+            permsGranted = true
         }
     }
 
@@ -100,11 +98,10 @@ class Home : AppCompatActivity() {
             100 -> {
                 if ((grantResults.isNotEmpty()) && (grantResults[0] == PackageManager.PERMISSION_GRANTED) &&
                     (grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
-                        Log.i(TAG, "SUCCESS client granted perms")
-                        locGranted = true
-                        //testingCode()
+                        Log.i(TAG, "[SUCCESS] Permissions granted")
+                        permsGranted = true
                 } else {
-                    Log.i(TAG,"FAIL client denied perms")
+                    Log.i(TAG,"[FAIL] Client denied permissions")
                 }
                 return
             }
@@ -115,10 +112,10 @@ class Home : AppCompatActivity() {
     fun testingCode() {
         val intent = Intent(this, TaskService::class.java)
 
-        // test lat & long of cn tower
-        val lat = 43.642567
-        val long = -79.387054
-        val radius = 250.0 //metres
+        // test lat & long
+        val lat = 43.945302
+        val long = -78.892388
+        val radius = 100.0 //metres
 
         val testLoc = Location("")
         testLoc.latitude = lat
@@ -126,11 +123,11 @@ class Home : AppCompatActivity() {
 
         val steps = ArrayList<Step>()
 
-        val number = "+1##########" //add your own number here for testing
-        val msg = "this is a test SMS from GPSTasks"
+        val number = "+12898032117" //burner phone number from TextNow
+        val msg = "Turning into the school now, be there in a couple minutes."
         val smsAction = SMSAction(number, msg)
 
-        val locStep = LocStep(smsAction, testLoc, radius)
+        val locStep = LocStep(smsAction, testLoc, radius, true)
         steps.add(locStep)
 
         val testTask = Task("Testing task", steps, true)

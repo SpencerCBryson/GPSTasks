@@ -20,5 +20,4 @@ class SMSAction(val target : String, val msg : String) : Action(1), Parcelable {
             Log.i(TAG, "SMS failed to send")
         }
     }
-
 }

@@ -1,10 +1,6 @@
 package com.spencerbyson.gpstasks
 
-import android.app.Activity
-import android.content.Intent
 import android.support.v7.widget.RecyclerView
-import android.text.Layout
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,8 +15,9 @@ class MainRecyclerAdapter(val taskList: ArrayList<Task>): RecyclerView.Adapter<M
         holder.title.text = task.title
         holder.toggle.isChecked = task.enabled
 
-//        holder.itemView.setOnClickListener{
-//        }
+        holder.itemView.setOnClickListener{
+            //TODO : launch edit task intent
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -32,15 +29,9 @@ class MainRecyclerAdapter(val taskList: ArrayList<Task>): RecyclerView.Adapter<M
         return taskList.size
     }
 
-    fun deleteItem(i: Int){
-        taskList.removeAt(i)
-    }
-
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         var title = itemView.findViewById<TextView>(R.id.mTitle)
         var toggle = itemView.findViewById<Switch>(R.id.mToggle)
     }
-
-
 }
 
