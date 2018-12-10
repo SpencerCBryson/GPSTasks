@@ -13,9 +13,8 @@ import android.widget.TextView
 class MainRecyclerAdapter(val userList: ArrayList<String>): RecyclerView.Adapter<MainRecyclerAdapter.ViewHolder>() {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder?.left?.text = userList[position] + "0"
-        holder?.middle?.text = userList[position]  + "1"
-        holder?.right?.text = userList[position] + "2"
+        holder?.left?.text = userList[position]
+        holder?.right?.text = userList[position]
         holder.itemView.setOnClickListener{
         }
     }
@@ -35,7 +34,6 @@ class MainRecyclerAdapter(val userList: ArrayList<String>): RecyclerView.Adapter
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         val left = itemView.findViewById<TextView>(R.id.mLeftText)
-        val middle = itemView.findViewById<TextView>(R.id.mMiddleText)
         val right = itemView.findViewById<TextView>(R.id.mRightText)
     }
 

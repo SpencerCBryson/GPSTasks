@@ -10,7 +10,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="5dp"
-            app:cardCornerRadius="10dp">
+            app:cardCornerRadius="10dp" app:cardBackgroundColor="@color/colorPrimary">
 
         <LinearLayout
                 android:orientation="horizontal"
@@ -21,19 +21,13 @@
                     android:text="left"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" android:id="@+id/mLeftText" android:layout_weight="1"
-                    android:textSize="48sp"/>
-            <TextView
-                    android:padding="4dp"
-                    android:text="middle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:id="@+id/mMiddleText" android:layout_weight="1"
-                    android:textSize="24sp"/>
+                    android:textSize="48sp" android:textColor="@android:color/white" android:textAlignment="center"/>
             <TextView
                     android:padding="4dp"
                     android:text="right"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" android:id="@+id/mRightText" android:layout_weight="1"
-                    android:textSize="48sp"/>
+                    android:textSize="48sp" android:textColor="@android:color/white" android:textAlignment="center"/>
         </LinearLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>
