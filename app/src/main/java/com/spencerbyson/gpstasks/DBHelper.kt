@@ -10,16 +10,17 @@ import android.util.Log
 var DATABASE_NAME = "TaskDB"
 var DATABASE_VERSION = 1
 
-var CREATE_TASK_TABLE = "CREATE TABLE TaskTable( id int primary key, taskName varchar(100) not null);"
+var CREATE_TASK_TABLE = "CREATE TABLE TaskTable( id int primary key, taskName varchar(100) not null, enabled boolean);"
 var CREATE_STEP_TABLE = "CREATE TABLE StepTable( id int primary key, type int, data varchar(100) not null);"
 var CREATE_TASK_STEP_TABLE = "CREATE TABLE TaskStepsTable( taskID int, stepID int);"
 
 var TABLE_NAME1 = "TaskTable"
 var TABLE_NAME2 = "stepTable"
-var TABLE_NAME3 = "TaskStepTable"
+var TABLE_NAME3 = "TaskStepsTable"
 
 var T1_COL_ID = "id"
 var T1_COL_NAME = "taskName"
+var T1_COL_ENABLED = "enabled"
 
 var T2_COL_ID = "id"
 var T2_COL_TYPE = "type"
@@ -48,6 +49,14 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context,
         insertTask(1, "task1")
         insertTask(2, "task2")
         insertTask(3, "task3")
+        insertStep(1, 0, "DUMMYDATA1")
+        insertStep(2, 0, "DUMMYDATA2")
+        insertStep(3, 1, "DUMMYDATA3")
+        insertStep(4, 1, "DUMMYDATA4")
+        insertStepTask(1, 1)
+        insertStepTask(1, 2)
+        insertStepTask(2, 3)
+        insertStepTask(2, 4)
     }
 
     fun insertTask(id: Int, task: String){
@@ -55,6 +64,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context,
         var cv = ContentValues()
         cv.put(T1_COL_ID, id)
         cv.put(T1_COL_NAME, task)
+        cv.put(T1_COL_ENABLED, true)
         db.insert(TABLE_NAME1, null, cv)
     }
 
@@ -75,7 +85,6 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context,
         db.insert(TABLE_NAME3, null, cv)
     }
 
-
     fun readTasks() : MutableList<TaskDataObj>{
         var list : MutableList<TaskDataObj> = ArrayList()
         val db = this.readableDatabase
@@ -86,7 +95,6 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context,
                 val id = result.getString(result.getColumnIndex(T1_COL_ID)).toInt()
                 val name = result.getString(result.getColumnIndex(T1_COL_NAME))
                 list.add(TaskDataObj(id, name))
-                Log.d("nice", "data")
             }while(result.moveToNext())
         }
         result.close()
@@ -105,6 +113,23 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context,
                 val type = result.getString(result.getColumnIndex(T2_COL_TYPE)).toInt()
                 val data = result.getString(result.getColumnIndex(T2_COL_DATA))
                 list.add(StepDataObj(id, type, data))
+            }while(result.moveToNext())
+        }
+        result.close()
+        db.close()
+        return list
+    }
+
+    fun readStepTasks() : MutableList<TaskStepDataObj>{
+        var list : MutableList<TaskStepDataObj> = ArrayList()
+        val db = this.readableDatabase
+        val query = "Select * from " + TABLE_NAME3
+        var result = db.rawQuery(query, null)
+        if(result.moveToFirst()){
+            do{
+                val task = result.getString(result.getColumnIndex(T3_COL_TASK)).toInt()
+                val step = result.getString(result.getColumnIndex(T3_COL_STEP)).toInt()
+                list.add(TaskStepDataObj(task, step))
             }while(result.moveToNext())
         }
         result.close()

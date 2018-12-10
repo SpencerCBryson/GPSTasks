@@ -38,10 +38,10 @@ class Home : AppCompatActivity() {
         var db = DBHelper(this)
         db.populate()
         Log.d("nice", db.readTasks().toString())
+        Log.d("nice", db.readSteps().toString())
+        Log.d("nice", db.readStepTasks().toString())
 
         getPerms()
-
-        //TODO Change this to populate from the SQLite database of tasks.
 
         rv = findViewById(R.id.mRecyclerView)
         rv.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
