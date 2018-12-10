@@ -23,6 +23,9 @@ class Home : AppCompatActivity() {
     var locGranted = false
     val TAG = "GPSTasks-Main"
 
+    lateinit var rv : RecyclerView
+    var taskList = ArrayList<Task>()
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         Log.d("nice", requestCode.toString() + resultCode.toString() + data.toString())
     }
@@ -33,16 +36,22 @@ class Home : AppCompatActivity() {
         getPerms()
 
         //TODO Change this to populate from the SQLite database of tasks.
-        val rvlist = arrayListOf("one", "two", "three", "four", "five", "six", "seven", "eight", "nine")
-        val rv = findViewById<RecyclerView>(R.id.mRecyclerView)
+
+        rv = findViewById(R.id.mRecyclerView)
         rv.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
-        rv.adapter = MainRecyclerAdapter(rvlist)
+        rv.adapter = MainRecyclerAdapter(taskList)
 
         val addButton = findViewById<Button>(R.id.mAddButton)
         addButton.setOnClickListener{
             val intent =    Intent(this, AddTask::class.java)
             startActivityForResult(intent, 1)
         }
+
+
+        if(locGranted)
+            testingCode()
+        else
+            return
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -75,7 +84,7 @@ class Home : AppCompatActivity() {
         } else {
             Log.i(TAG, "perms granted!")
             locGranted = true
-            testingCode()
+            //testingCode()
         }
     }
 
@@ -87,7 +96,7 @@ class Home : AppCompatActivity() {
                     (grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
                         Log.i(TAG, "SUCCESS client granted perms")
                         locGranted = true
-                        testingCode()
+                        //testingCode()
                 } else {
                     Log.i(TAG,"FAIL client denied perms")
                 }
@@ -118,12 +127,11 @@ class Home : AppCompatActivity() {
         val locStep = LocStep(smsAction, testLoc, radius)
         steps.add(locStep)
 
-        val testTask = Task(steps)
+        val testTask = Task("Testing task", steps, true)
 
-        val taskArrayList = ArrayList<Task>()
-        taskArrayList.add(testTask)
+        addTask(testTask)
 
-        intent.putExtra("TASKS", taskArrayList)
+        intent.putExtra("TASKS", taskList)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(intent)
@@ -131,6 +139,11 @@ class Home : AppCompatActivity() {
             startService(intent)
         }
 
+    }
+
+    fun addTask(task : Task) {
+        taskList.add(taskList.size, task)
+        rv.adapter!!.notifyItemInserted(taskList.size)
     }
 
 }

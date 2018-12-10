@@ -6,7 +6,7 @@ import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.RawValue
 
 @Parcelize
-class Task(val steps : @RawValue ArrayList<Step>) : Parcelable {
+class Task(var title : String, var steps : @RawValue ArrayList<Step>, var enabled : Boolean = true) : Parcelable {
     val TAG = "GPSTasks-Task"
 
     fun updateLocation(loc : Location) {

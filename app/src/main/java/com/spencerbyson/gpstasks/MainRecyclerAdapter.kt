@@ -4,19 +4,23 @@ import android.app.Activity
 import android.content.Intent
 import android.support.v7.widget.RecyclerView
 import android.text.Layout
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Switch
 import android.widget.TextView
 
 
-class MainRecyclerAdapter(val userList: ArrayList<String>): RecyclerView.Adapter<MainRecyclerAdapter.ViewHolder>() {
+class MainRecyclerAdapter(val taskList: ArrayList<Task>): RecyclerView.Adapter<MainRecyclerAdapter.ViewHolder>() {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder?.left?.text = userList[position]
-        holder?.right?.text = userList[position]
-        holder.itemView.setOnClickListener{
-        }
+        val task = taskList[position]
+        holder.title.text = task.title
+        holder.toggle.isChecked = task.enabled
+
+//        holder.itemView.setOnClickListener{
+//        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -25,16 +29,16 @@ class MainRecyclerAdapter(val userList: ArrayList<String>): RecyclerView.Adapter
     }
 
     override fun getItemCount(): Int {
-        return userList.size
+        return taskList.size
     }
 
     fun deleteItem(i: Int){
-        userList.removeAt(i)
+        taskList.removeAt(i)
     }
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
-        val left = itemView.findViewById<TextView>(R.id.mLeftText)
-        val right = itemView.findViewById<TextView>(R.id.mRightText)
+        var title = itemView.findViewById<TextView>(R.id.mTitle)
+        var toggle = itemView.findViewById<Switch>(R.id.mToggle)
     }
 
 
