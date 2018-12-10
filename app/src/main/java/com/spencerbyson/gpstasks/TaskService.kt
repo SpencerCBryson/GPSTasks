@@ -27,16 +27,14 @@ class TaskService() : Service() {
     lateinit var locManager : LocationManager
     lateinit var tasks : ArrayList<Task>
 
-
+    // sends new location to all tasks
     fun updateLocation(loc : Location) {
-        /*
-        Log.i(TAG, loc.toString())
         tasks.forEach {
             it.updateLocation(loc)
         }
-        */
     }
 
+    // location listener that calls update location with a new location when available
     val locListener = object : LocationListener {
         override fun onLocationChanged(location: Location?) {
             updateLocation(location!!)
@@ -56,12 +54,10 @@ class TaskService() : Service() {
         setupLocListener()
     }
 
-
-//  TODO: set tasks arraylist from intent data
-//    override fun onStartCommand(intent: Intent, flags: Int, startId: Int) : Int {
-//        //data = (intent.extras!!.get("data") as String).toInt()
-//    }
-
+    override fun onStartCommand(intent: Intent, flags: Int, startId: Int) : Int {
+        tasks = intent.extras!!.get("TASKS") as ArrayList<Task>
+        return START_STICKY
+    }
 
     fun setupLocListener() {
         locManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager

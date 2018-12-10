@@ -3,6 +3,7 @@ package com.spencerbyson.gpstasks
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
@@ -39,7 +40,7 @@ class Home : AppCompatActivity() {
 
         val addButton = findViewById<Button>(R.id.mAddButton)
         addButton.setOnClickListener{
-            val intent = Intent(this, AddTask::class.java)
+            val intent =    Intent(this, AddTask::class.java)
             startActivityForResult(intent, 1)
         }
     }
@@ -94,11 +95,28 @@ class Home : AppCompatActivity() {
         val intent = Intent(this, TaskService::class.java)
 
         //todo: fetch a location to test with
-        val testTask = Task()
-        //val locStep = LocStep(null)
-        //testTask.steps.add(locStep)
 
-        //todo: make task serializable and put extra in intent
+        // test lat & long of cn tower
+        val lat = 43.642567
+        val long = -79.387054
+        val radius = 100.0 //metres
+
+        val testLoc = Location("")
+        testLoc.latitude = lat
+        testLoc.longitude = long
+
+        val steps = ArrayList<Step>()
+
+        val locStep = LocStep(testLoc, radius)
+        steps.add(locStep)
+
+        val testTask = Task(steps)
+
+        val taskArrayList = ArrayList<Task>()
+        taskArrayList.add(testTask)
+
+        intent.putExtra("TASKS", taskArrayList)
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(intent)
         } else {
