@@ -2,14 +2,12 @@ package com.spencerbyson.gpstasks
 
 import android.location.Location
 import android.os.Parcelable
-import android.util.Log
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.RawValue
 
 @Parcelize
 class Task(val steps : @RawValue ArrayList<Step>) : Parcelable {
     val TAG = "GPSTasks-Task"
-    //var steps = ArrayList<Step>()
 
     fun updateLocation(loc : Location) {
         steps.forEach {
