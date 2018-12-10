@@ -7,4 +7,5 @@
     <string name="taskmenutitle">Tasks</string>
     <string name="configuretask">Configure Task</string>
     <string name="configureaction">Configure Action</string>
+    <string name="title_activity_configure_task_location">Map</string>
 </resources>

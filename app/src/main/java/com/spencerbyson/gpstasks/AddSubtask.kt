@@ -30,8 +30,9 @@ class AddSubtask : AppCompatActivity() {
         val configActButton = findViewById<Button>(R.id.mConfigureActionButton)
 
         configTaskButton.setOnClickListener{
-            val intent = Intent(this, Configure::class.java)
+            val intent = Intent(this, ConfigureTaskLocation::class.java)
             intent.putExtra("Task", task.selectedItemPosition.toString())
+            startActivity(intent)
         }
 
         configActButton.setOnClickListener{
