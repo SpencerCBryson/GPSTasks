@@ -16,11 +16,8 @@ import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationCompat.PRIORITY_MIN
 import android.util.Log
 import android.widget.Toast
-import android.R.attr.data
 
-
-
-class TaskService() : Service() {
+class TaskService : Service() {
 
     val TAG = "GPSTasks-TaskService"
 

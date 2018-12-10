@@ -62,14 +62,18 @@ class Home : AppCompatActivity() {
     }
 
     fun getPerms () {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Log.i(TAG,"WARN no loc perm granted")
+        if ((ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) &&
+            (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED)) {
 
-            ActivityCompat.requestPermissions(this,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                100)
+            Log.i(TAG, "WARN missing perms")
+
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.SEND_SMS),
+                100
+            )
         } else {
-            Log.i(TAG, "loc perm granted!")
+            Log.i(TAG, "perms granted!")
             locGranted = true
             testingCode()
         }
@@ -79,9 +83,11 @@ class Home : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when(requestCode) {
             100 -> {
-                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    Log.i(TAG, "SUCCESS client granted perms")
-                    locGranted = true
+                if ((grantResults.isNotEmpty()) && (grantResults[0] == PackageManager.PERMISSION_GRANTED) &&
+                    (grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
+                        Log.i(TAG, "SUCCESS client granted perms")
+                        locGranted = true
+                        testingCode()
                 } else {
                     Log.i(TAG,"FAIL client denied perms")
                 }
@@ -93,8 +99,6 @@ class Home : AppCompatActivity() {
     // code to test our task service
     fun testingCode() {
         val intent = Intent(this, TaskService::class.java)
-
-        //todo: fetch a location to test with
 
         // test lat & long of cn tower
         val lat = 43.642567
@@ -122,6 +126,13 @@ class Home : AppCompatActivity() {
         } else {
             startService(intent)
         }
+
+        //test sms
+
+        val number = "" //add your own number here for testing
+        val msg = "this is a test SMS from GPSTasks"
+        val smsAction = SMSAction(number, msg)
+        //smsAction.execute()
     }
 
 }
