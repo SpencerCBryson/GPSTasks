@@ -1,17 +1,18 @@
-
+package com.spencerbyson.gpstasks
 
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 
 
 var DATABASE_NAME = "TaskDB"
 var DATABASE_VERSION = 1
 
-var DATABASE_CREATE1 = "CREATE TABLE TaskTable( id int primary key, taskName varchar(100) not null);"
-var DATABASE_CREATE2 = "CREATE TABLE StepTable( id int primary key, type int, data varchar(100) not null);"
-var DATABASE_CREATE3 = "CREATE TABLE TaskStepsTable( taskID int primary key, stepID int);"
+var CREATE_TASK_TABLE = "CREATE TABLE TaskTable( id int primary key, taskName varchar(100) not null);"
+var CREATE_STEP_TABLE = "CREATE TABLE StepTable( id int primary key, type int, data varchar(100) not null);"
+var CREATE_TASK_STEP_TABLE = "CREATE TABLE TaskStepsTable( taskID int, stepID int);"
 
 var TABLE_NAME1 = "TaskTable"
 var TABLE_NAME2 = "stepTable"
@@ -27,12 +28,14 @@ var T2_COL_DATA = "data"
 var T3_COL_TASK = "taskID"
 var T3_COL_STEP = "stepID"
 
-class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION){
+class DBHelper(context: Context) : SQLiteOpenHelper(context,
+    DATABASE_NAME, null,
+    DATABASE_VERSION
+){
     override fun onCreate(db: SQLiteDatabase){
-        db?.execSQL(DATABASE_CREATE1)
-        db?.execSQL(DATABASE_CREATE2)
-        db?.execSQL(DATABASE_CREATE3)
-        populate()
+        db?.execSQL(CREATE_TASK_TABLE)
+        db?.execSQL(CREATE_STEP_TABLE)
+        db?.execSQL(CREATE_TASK_STEP_TABLE)
     }
 
 
@@ -42,7 +45,9 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
 
     //TODO Implement Database Population
     fun populate(){
-
+        insertTask(1, "task1")
+        insertTask(2, "task2")
+        insertTask(3, "task3")
     }
 
     fun insertTask(id: Int, task: String){
@@ -71,22 +76,39 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
     }
 
 
-    fun readData() : MutableList<String>{
-        var list : MutableList<String> = ArrayList()
-//        val db = this.readableDatabase
-//        val query = "Select * from " + TABLE_NAME
-//        val result = db.rawQuery(query, null)
-//        if(result.moveToFirst()){
-//            do {
-//
-//                list.add(product)
-//
-//            }while (result.moveToNext())
-//        }
-//
-//        result.close()
-//        db.close()
+    fun readTasks() : MutableList<TaskDataObj>{
+        var list : MutableList<TaskDataObj> = ArrayList()
+        val db = this.readableDatabase
+        val query = "Select * from " + TABLE_NAME1
+        var result = db.rawQuery(query, null)
+        if(result.moveToFirst()){
+            do{
+                val id = result.getString(result.getColumnIndex(T1_COL_ID)).toInt()
+                val name = result.getString(result.getColumnIndex(T1_COL_NAME))
+                list.add(TaskDataObj(id, name))
+                Log.d("nice", "data")
+            }while(result.moveToNext())
+        }
+        result.close()
+        db.close()
+        return list
+    }
 
+    fun readSteps() : MutableList<StepDataObj>{
+        var list : MutableList<StepDataObj> = ArrayList()
+        val db = this.readableDatabase
+        val query = "Select * from " + TABLE_NAME2
+        var result = db.rawQuery(query, null)
+        if(result.moveToFirst()){
+            do{
+                val id = result.getString(result.getColumnIndex(T2_COL_ID)).toInt()
+                val type = result.getString(result.getColumnIndex(T2_COL_TYPE)).toInt()
+                val data = result.getString(result.getColumnIndex(T2_COL_DATA))
+                list.add(StepDataObj(id, type, data))
+            }while(result.moveToNext())
+        }
+        result.close()
+        db.close()
         return list
     }
 

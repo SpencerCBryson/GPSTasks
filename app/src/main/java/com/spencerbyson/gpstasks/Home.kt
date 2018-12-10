@@ -33,6 +33,12 @@ class Home : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+
+
+        var db = DBHelper(this)
+        db.populate()
+        Log.d("nice", db.readTasks().toString())
+
         getPerms()
 
         //TODO Change this to populate from the SQLite database of tasks.
