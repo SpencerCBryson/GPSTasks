@@ -103,7 +103,7 @@ class Home : AppCompatActivity() {
         // test lat & long of cn tower
         val lat = 43.642567
         val long = -79.387054
-        val radius = 100.0 //metres
+        val radius = 250.0 //metres
 
         val testLoc = Location("")
         testLoc.latitude = lat
@@ -111,7 +111,11 @@ class Home : AppCompatActivity() {
 
         val steps = ArrayList<Step>()
 
-        val locStep = LocStep(testLoc, radius)
+        val number = "+1##########" //add your own number here for testing
+        val msg = "this is a test SMS from GPSTasks"
+        val smsAction = SMSAction(number, msg)
+
+        val locStep = LocStep(smsAction, testLoc, radius)
         steps.add(locStep)
 
         val testTask = Task(steps)
@@ -127,12 +131,6 @@ class Home : AppCompatActivity() {
             startService(intent)
         }
 
-        //test sms
-
-        val number = "" //add your own number here for testing
-        val msg = "this is a test SMS from GPSTasks"
-        val smsAction = SMSAction(number, msg)
-        //smsAction.execute()
     }
 
 }

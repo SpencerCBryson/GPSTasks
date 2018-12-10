@@ -15,6 +15,7 @@ class SMSAction(val target : String, val msg : String) : Action(1), Parcelable {
             val smgr = SmsManager.getDefault()
             smgr.sendTextMessage(target, null, msg, null, null)
             Log.i(TAG, "Sent SMS!")
+            //TODO: call some listener in Task Service to update UI to reflect step & action completion
         } catch (e : Exception) {
             Log.i(TAG, "SMS failed to send")
         }

@@ -21,6 +21,8 @@ class Task(val steps : @RawValue ArrayList<Step>) : Parcelable {
         }
     }
 
+
+
     companion object {
         val LOCATION_STEP = 1
         val TIME_STEP = 2
