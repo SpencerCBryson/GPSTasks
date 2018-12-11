@@ -8,4 +8,11 @@
     <string name="configuretask">Configure Task</string>
     <string name="configureaction">Configure Action</string>
     <string name="title_activity_configure_task_location">Map</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="trigger_text">Triggers</string>
+    <string name="action_text">Actions</string>
+    <string name="entered_area_text">Entered Area</string>
+    <string name="sms_text">Send SMS</string>
 </resources>

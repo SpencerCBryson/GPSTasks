@@ -7,23 +7,21 @@ import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.RawValue
 
 @Parcelize
-class LocStep(val _action : @RawValue Action, val target : Location, val radius : Double, val withinRadius : Boolean) : Step(1, _action, false), Parcelable {
+class LocStep(val target : Location, val radius : Double, val withinRadius : Boolean) : Step(1, false), Parcelable {
 
     val TAG = "GPSTasks-LocStep"
+    val typeTag = "Entered Radius"
 
-    fun predicate(loc : Location) : Boolean {
+    fun predicate(loc: Location): Boolean {
         val distance = target.distanceTo(loc)
         Log.i(TAG, "Distance: $distance")
 
-        return if(withinRadius) // location inside radius
+        return if (withinRadius) // location inside radius
             distance <= radius
         else // location outside radius
             distance >= radius
     }
 
-    override fun action() {
-        Log.i(TAG, "Executing action")
-        action.execute()
-        finished = true
-    }
+    override fun execute() {}
 }
+

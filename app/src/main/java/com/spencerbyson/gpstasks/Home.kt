@@ -22,12 +22,18 @@ class Home : AppCompatActivity() {
 
     var permsGranted = false
     val TAG = "GPSTasks-Main"
+    val CREATE_TASK = 1
 
     lateinit var rv : RecyclerView
     var taskList = ArrayList<Task>()
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         Log.d("nice", requestCode.toString() + resultCode.toString() + data.toString())
+
+        if (requestCode == CREATE_TASK) {
+            val task = data!!.getParcelableExtra<Task>("task")
+            addTask(task)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,8 +57,8 @@ class Home : AppCompatActivity() {
 
         val addButton = findViewById<Button>(R.id.mAddButton)
         addButton.setOnClickListener{
-            val intent = Intent(this, AddTask::class.java)
-            startActivityForResult(intent, 1)
+        val intent =    Intent(this, AddTask::class.java)
+        startActivityForResult(intent, CREATE_TASK)
         }
 
 
@@ -127,8 +133,9 @@ class Home : AppCompatActivity() {
         val msg = "Turning into the school now, be there in a couple minutes."
         val smsAction = SMSAction(number, msg)
 
-        val locStep = LocStep(smsAction, testLoc, radius, true)
+        val locStep = LocStep(testLoc, radius, true)
         steps.add(locStep)
+        steps.add(smsAction)
 
         val testTask = Task("Testing task", steps, true)
 

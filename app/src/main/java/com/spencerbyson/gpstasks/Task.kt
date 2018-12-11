@@ -13,22 +13,33 @@ class Task(var title : String, var steps : @RawValue ArrayList<Step>, var enable
     var id : Int = -1
 
     fun updateLocation(loc : Location) {
-        steps.forEach {
-            if(!it.finished) {
-                when(it.type) {
-                    LOCATION_STEP -> {
-                        val locStep = it as LocStep
-                        if (locStep.predicate(loc)) {
-                            // location within target
-                            locStep.action()
-                        }
-                    }
+        steps.forEach checkSteps@{
+            if (it.finished)
+                return@checkSteps
+
+            if(it is LocStep) {
+                System.out.println("*********** checking loc")
+                val locStep = it as LocStep
+                if (locStep.predicate(loc)) {
+                    // location within target
+                    locStep.finished = true
+                } else {
+                    return
                 }
+            } else if (it is SMSAction) {
+                System.out.println("############# doing action")
+                it.execute()
             }
         }
+
+        resetSteps()
     }
 
-
+    fun resetSteps() {
+        steps.forEach {
+            it.finished = false
+        }
+    }
 
     companion object {
         val LOCATION_STEP = 1

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="Enter Area" android:icon="@android:drawable/ic_menu_mylocation" android:id="@+id/enter_area"
+    />
+    <item android:title="Send SMS" android:id="@+id/send_SMS" android:icon="@android:drawable/ic_dialog_email"/>
+</menu>

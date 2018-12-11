@@ -7,8 +7,9 @@ import android.util.Log
 
 
 @Parcelize
-class SMSAction(val target : String, val msg : String) : Action(1), Parcelable {
+class SMSAction(val target : String, val msg : String) : Step(2, false), Parcelable {
     val TAG = "GPSTasks-SMSAction"
+    val typeTag = "Send SMS"
 
     override fun execute() {
         try {

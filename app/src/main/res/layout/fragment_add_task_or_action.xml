@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="300dp"
+              android:minWidth="300dp"
+              android:layout_height="wrap_content"
+              android:padding="10dp"
+              tools:context=".AddTaskOrAction" android:layout_gravity="center" android:orientation="vertical">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+            android:text="@string/trigger_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/textView3" android:textStyle="bold"
+            android:textSize="18sp"/>
+    <TextView
+            android:text="@string/entered_area_text"
+            android:layout_width="match_parent"
+            android:id="@+id/enter_area"
+            android:drawableStart="@android:drawable/ic_menu_mylocation"
+            android:onClick="optionSelected"
+            android:layout_height="wrap_content"/>
+    <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider"
+    />
+    <TextView
+            android:text="@string/action_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:id="@+id/textView4" android:textStyle="bold"
+            android:textSize="18sp"/>
+    <View
+            android:id="@+id/divider2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider"
+    />
+    <TextView
+            android:text="@string/sms_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/send_SMS"
+            android:onClick="optionSelected"
+            android:drawableLeft="@android:drawable/ic_dialog_email"/>
+
+</LinearLayout>

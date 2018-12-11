@@ -1,10 +1,12 @@
 package com.spencerbyson.gpstasks
 
+import android.content.Intent
 import android.graphics.Camera
 import android.location.Location
 import android.location.LocationManager
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.location.places.Place
 
@@ -34,7 +36,7 @@ class ConfigureTaskLocation : AppCompatActivity(), OnMapReadyCallback, PlaceSele
         mapFragment.getMapAsync(this)
 
 
-
+        // not sure what the ideal non-deprecated alternative is to fragmentManager
         val autocompleteFragment = fragmentManager
             .findFragmentById(R.id.placeSearch) as PlaceAutocompleteFragment
         autocompleteFragment.setOnPlaceSelectedListener(this)
@@ -52,10 +54,6 @@ class ConfigureTaskLocation : AppCompatActivity(), OnMapReadyCallback, PlaceSele
 
     override fun onError(p0: Status?) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    fun newTarget() {
-
     }
 
     fun location(latlng : LatLng) = Location(LocationManager.GPS_PROVIDER).apply {
@@ -83,6 +81,15 @@ class ConfigureTaskLocation : AppCompatActivity(), OnMapReadyCallback, PlaceSele
 
         selection.radius = radius
         selection.center = location
+    }
+
+    fun selectLocation(view : View) {
+        val step = LocStep(location(selection.center), selection.radius, true)
+        val data = Intent()
+        data.putExtra("step", step)
+
+        setResult(1, data)
+        finish()
     }
 
     /**
