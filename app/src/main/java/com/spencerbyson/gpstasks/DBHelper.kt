@@ -4,10 +4,11 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.location.Location
 import android.util.Log
 
 
-var DATABASE_NAME = "TaskDB"
+var DATABASE_NAME = "TaskDB2"
 var DATABASE_VERSION = 1
 
 var CREATE_TASK_TABLE = "CREATE TABLE TaskTable( id int primary key, taskName varchar(100) not null, enabled boolean);"
@@ -46,13 +47,17 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context,
 
     //TODO Implement Database Population
     fun populate(){
+        //T1
         insertTask(1, "task1")
         insertTask(2, "task2")
-        insertTask(3, "task3")
+
+        //T2
         insertStep(1, 0, "DUMMYDATA1")
         insertStep(2, 0, "DUMMYDATA2")
         insertStep(3, 1, "DUMMYDATA3")
         insertStep(4, 1, "DUMMYDATA4")
+
+        //T3
         insertStepTask(1, 1)
         insertStepTask(1, 2)
         insertStepTask(2, 3)
@@ -137,9 +142,35 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context,
         return list
     }
 
+    fun getTasks() : ArrayList<Task>{
+        var list = ArrayList<Task>()
+        var stepList = ArrayList<Step>()
+
+        val db = this.writableDatabase
+        val query1 = "SELECT * FROM " + TABLE_NAME1
+        val data1 = db.rawQuery(query1, null)
+        if(data1.moveToFirst()){
+            do{
+                val query2 = "SELECT * FROM " + TABLE_NAME2 + " INNER JOIN " + TABLE_NAME3 + " ON " + TABLE_NAME2 + ".id = " + TABLE_NAME3 + ".stepID WHERE " + TABLE_NAME3 + ".taskID = " + data1.getString(data1.getColumnIndex(T1_COL_ID))
+                val data2 = db.rawQuery(query2, null)
+                if(data2.moveToFirst()){
+                        do{
+                            stepList.add(makeStep(data2.getString(data2.getColumnIndex(T2_COL_ID)).toInt(), data2.getString(data2.getColumnIndex(T2_COL_TYPE)).toInt(), data2.getString(data2.getColumnIndex(T2_COL_DATA))))
+                        }while(data2.moveToNext())
+                    }
+                list.add(Task(data1.getString(data1.getColumnIndex(T1_COL_NAME)), stepList, true))
+            }while(data1.moveToNext())
+        }
+        return list
+    }
+
     fun deleteData(table: String, column: String, target: Int){
         val db = this.writableDatabase
         db.delete(table, column + "=" + target, null)
         db.close()
+    }
+
+    fun makeStep(id: Int, type: Int, data: String) : Step{
+        return LocStep(Location(""), 100.0, true)
     }
 }

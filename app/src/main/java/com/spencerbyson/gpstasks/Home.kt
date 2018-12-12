@@ -40,12 +40,7 @@ class Home : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-
-        var db = DBHelper(this)
-        db.populate()
-        Log.d("nice", db.readTasks().toString())
-        Log.d("nice", db.readSteps().toString())
-        Log.d("nice", db.readStepTasks().toString())
+        updateTasks()
 
 
         // get permissions, all are required to make the app function correctly
@@ -156,4 +151,10 @@ class Home : AppCompatActivity() {
         rv.adapter!!.notifyItemInserted(taskList.size)
     }
 
+    fun updateTasks(){
+        var db = DBHelper(this)
+        db.populate()
+        var tasks = db.getTasks()
+        taskList = tasks
+    }
 }
