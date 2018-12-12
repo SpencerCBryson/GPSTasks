@@ -142,6 +142,15 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context,
         return list
     }
 
+
+    //TODO use tostring to insert steps once it's been implemented
+    fun addTask(task: Task){
+        insertTask(task.id, task.title)
+        task.steps.forEach{
+            //insertStep(it)
+        }
+    }
+
     fun getTasks() : ArrayList<Task>{
         var list = ArrayList<Task>()
         var stepList = ArrayList<Step>()
@@ -162,12 +171,6 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context,
             }while(data1.moveToNext())
         }
         return list
-    }
-
-    fun deleteData(table: String, column: String, target: Int){
-        val db = this.writableDatabase
-        db.delete(table, column + "=" + target, null)
-        db.close()
     }
 
     fun makeStep(id: Int, type: Int, data: String) : Step{
