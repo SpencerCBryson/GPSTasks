@@ -8,7 +8,7 @@ import android.location.Location
 import android.util.Log
 
 
-var DATABASE_NAME = "TaskDB3"
+var DATABASE_NAME = "TaskDB4"
 var DATABASE_VERSION = 1
 
 var CREATE_TASK_TABLE = "CREATE TABLE TaskTable( id int primary key, taskName varchar(100) not null, enabled boolean);"
@@ -44,17 +44,13 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context,
     //TODO Implement Database Population
     fun populate(){
 
-        //T1
-        insertTask("task1")
-        insertTask("task2")
-
-        //T2
-        insertStep(1, "DUMMYDATA1", 1)
-        insertStep(1, "DUMMYDATA2", 1)
-        insertStep(1, "DUMMYDATA3", 2)
-        insertStep(1, "DUMMYDATA4", 2)
-
-
+        val loc = Location("")
+        loc.latitude = 10.0
+        loc.longitude = 10.0
+        val s1 = LocStep(loc, 10.0, false)
+        val s2 = SMSAction("6474639574", "nice")
+        val t = Task("DummyTask", arrayListOf(s1, s2), true)
+        addTask(t)
     }
 
     fun insertTask(task: String){
@@ -73,46 +69,11 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context,
         db.insert(TABLE_NAME2, null, cv)
     }
 
-    fun readTasks() : MutableList<TaskDataObj>{
-        var list : MutableList<TaskDataObj> = ArrayList()
-        val db = this.readableDatabase
-        val query = "Select * from " + TABLE_NAME1
-        var result = db.rawQuery(query, null)
-        if(result.moveToFirst()){
-            do{
-                val id = result.getString(result.getColumnIndex(T1_COL_ID)).toInt()
-                val name = result.getString(result.getColumnIndex(T1_COL_NAME))
-                list.add(TaskDataObj(id, name))
-            }while(result.moveToNext())
-        }
-        result.close()
-        db.close()
-        return list
-    }
-
-    fun readSteps() : MutableList<StepDataObj>{
-        var list : MutableList<StepDataObj> = ArrayList()
-        val db = this.readableDatabase
-        val query = "Select * from " + TABLE_NAME2
-        var result = db.rawQuery(query, null)
-        if(result.moveToFirst()){
-            do{
-                val id = result.getString(result.getColumnIndex(T2_COL_ID)).toInt()
-                val type = result.getString(result.getColumnIndex(T2_COL_TYPE)).toInt()
-                val data = result.getString(result.getColumnIndex(T2_COL_DATA))
-                list.add(StepDataObj(id, type, data))
-            }while(result.moveToNext())
-        }
-        result.close()
-        db.close()
-        return list
-    }
-
     fun addTask(task: Task){
         insertTask(task.title)
         task.steps.forEach{
             //TODO MAKE THIS WORK
-            //insertStep(it)
+            insertStep(it.type, it.toString(), task.id)
         }
     }
 
@@ -146,7 +107,10 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context,
             //Type 1 = LocStep
         }else if(type == 1){
             val splitdata = data.split(",")
-            return LocStep(Location(splitdata[0]), splitdata[1].toDouble(), splitdata[2].toBoolean())
+            val loc = Location("")
+            loc.latitude=splitdata[0].toDouble()
+            loc.longitude=splitdata[1].toDouble()
+            return LocStep(loc, splitdata[2].toDouble(), splitdata[3].toBoolean())
         }
 
         //Returning Dummy Data, occurs if error.
