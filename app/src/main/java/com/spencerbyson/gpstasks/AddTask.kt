@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.*
 import android.widget.Button
 import android.widget.LinearLayout
@@ -14,6 +15,11 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.sms_action.*
 
 class AddTask : AppCompatActivity(), TaskBuilderRecyclerAdapter.PreviewListener, TextListener {
+
+    val TAG = "GPSTasks"
+
+    var editMode = false
+    var oldTask : Task? = null
 
     override fun startMapPreview() {
         val fm = supportFragmentManager.beginTransaction()
@@ -74,9 +80,15 @@ class AddTask : AppCompatActivity(), TaskBuilderRecyclerAdapter.PreviewListener,
         val title = findViewById<TextView>(R.id.mtaskNameTxt).text.toString()
         val task = Task(title, currentSteps, true)
         val data = Intent()
+
         data.putExtra("task", task)
 
-        setResult(1, data)
+        if(editMode) {
+            data.putExtra("oldTitle",   oldTask!!.title)
+            setResult(2, data)
+        } else {
+            setResult(1, data)
+        }
         finish()
     }
 
@@ -87,6 +99,18 @@ class AddTask : AppCompatActivity(), TaskBuilderRecyclerAdapter.PreviewListener,
         val addButton = findViewById<Button>(R.id.mAddButton)
 
 //        val contextMenu = findViewById<Menu>(addButton)
+
+        editMode = intent.getBooleanExtra("editMode", false)
+
+        if(editMode) {
+            val task = intent.getParcelableExtra<Task>("task")
+
+            Log.i(TAG, task.steps.size.toString())
+
+            task.steps.forEach { Log.i(TAG, it.toString())}
+
+            oldTask = task
+        }
 
         rv = findViewById(R.id.mTaskBuilderRecyclerView)
         rv.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)

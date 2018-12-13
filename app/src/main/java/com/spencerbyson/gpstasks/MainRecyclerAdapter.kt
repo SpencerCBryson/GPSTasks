@@ -1,6 +1,9 @@
 package com.spencerbyson.gpstasks
 
+import android.content.Intent
+import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,13 +13,20 @@ import android.widget.TextView
 
 class MainRecyclerAdapter(val taskList: ArrayList<Task>): RecyclerView.Adapter<MainRecyclerAdapter.ViewHolder>() {
 
+    val TAG = "GPSTasks-MRA"
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val task = taskList[position]
         holder.title.text = task.title
         holder.toggle.isChecked = task.enabled
 
+        Log.i(TAG, task.steps.size.toString())
+
         holder.itemView.setOnClickListener{
-            //TODO : launch edit task intent
+            val intent = Intent(holder.itemView.context, AddTask::class.java)
+            intent.putExtra("editMode", true)
+            intent.putExtra("task", task)
+            startActivity(holder.itemView.context, intent, null)
         }
     }
 

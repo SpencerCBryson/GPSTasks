@@ -23,6 +23,7 @@ class Home : AppCompatActivity() {
     var permsGranted = false
     val TAG = "GPSTasks-Main"
     val CREATE_TASK = 1
+    val EDIT_TASK = 2
 
     lateinit var rv : RecyclerView
     lateinit var db : DBHelper
@@ -34,6 +35,10 @@ class Home : AppCompatActivity() {
         if (requestCode == CREATE_TASK) {
             val task = data!!.getParcelableExtra<Task>("task")
             addTask(task)
+        } else if (requestCode == EDIT_TASK) {
+            val task = data!!.getParcelableExtra<Task>("task")
+            val oldTitle = data!!.getStringExtra("oldTitle")
+            updateTask(task, oldTitle)
         }
     }
 
@@ -47,7 +52,7 @@ class Home : AppCompatActivity() {
         // get permissions, all are required to make the app function correctly
         getPerms()
 
-        updateTasks()
+        loadTasks()
 
         rv = findViewById(R.id.mRecyclerView)
         rv.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
@@ -55,8 +60,8 @@ class Home : AppCompatActivity() {
 
         val addButton = findViewById<Button>(R.id.mAddButton)
         addButton.setOnClickListener{
-        val intent =    Intent(this, AddTask::class.java)
-        startActivityForResult(intent, CREATE_TASK)
+            val intent = Intent(this, AddTask::class.java)
+            startActivityForResult(intent, CREATE_TASK)
         }
 
 
@@ -149,15 +154,34 @@ class Home : AppCompatActivity() {
 
     }
 
+    fun launchService() {
+        val intent = Intent(this, TaskService::class.java)
+
+        intent.putExtra("TASKS", taskList)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(intent)
+        } else {
+            startService(intent)
+        }
+    }
+
     fun addTask(task : Task) {
         taskList.add(taskList.size, task)
         rv.adapter!!.notifyItemInserted(taskList.size)
         db.addTask(task)
     }
 
-    fun updateTasks(){
+    fun updateTask(task : Task, oldTitle : String) {
+        val index = taskList.indexOfFirst { it.title == oldTitle }
+        taskList[index] = task
+    }
+
+    fun loadTasks(){
         //db.populate()
         var tasks = db.getTasks()
         taskList = tasks
+
+        launchService()
     }
 }

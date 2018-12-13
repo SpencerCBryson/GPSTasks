@@ -10,7 +10,7 @@ class Task(var title : String, var steps : @RawValue ArrayList<Step>, var enable
     val TAG = "GPSTasks-Task"
 
     lateinit var handler : TaskHandler
-    var id : Int = -1
+    //var id : Int = -1
 
     fun updateLocation(loc : Location) {
         steps.forEach checkSteps@{

@@ -21,4 +21,10 @@ class SMSAction(val target : String, val msg : String) : Step(2, false), Parcela
             Log.i(TAG, "SMS failed to send")
         }
     }
+
+    override fun toString(): String {
+       return "$target|$msg"
+    }
+
+
 }

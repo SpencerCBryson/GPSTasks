@@ -64,9 +64,8 @@ class TaskService : Service(), TaskHandler {
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int) : Int {
         tasks = intent.extras!!.get("TASKS") as ArrayList<Task>
-        tasks.forEachIndexed { index, task ->
+        tasks.forEach{ task ->
             task.handler = this
-            task.id = index
         }
         return START_STICKY
     }
