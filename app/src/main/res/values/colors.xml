@@ -3,4 +3,6 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#03dac6</color>
+    <color name="mapFill">#3399e699</color>
+    <color name="mapStroke">#6633cc33</color>
 </resources>

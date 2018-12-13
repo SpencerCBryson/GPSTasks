@@ -14,6 +14,12 @@
     <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="phone"
+            android:ems="10"
+            android:id="@+id/sms_number" android:hint="Phone Number"/>
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:inputType="textPersonName"
             android:ems="10"
             android:id="@+id/sms_content" android:hint="SMS message"/>

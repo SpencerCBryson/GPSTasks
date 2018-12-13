@@ -31,8 +31,8 @@ class AddTask : AppCompatActivity(), TaskBuilderRecyclerAdapter.PreviewListener,
     var selectionFragment : Fragment? = null
     var mapFragment : Fragment? = null
 
-    override fun optionSelected(view : View, text : String) {
-        val action = SMSAction("###", text)
+    override fun optionSelected(view : View, text : String, phoneNumber : String) {
+        val action = SMSAction(phoneNumber, text)
         supportFragmentManager.beginTransaction()
             .remove(selectionFragment!!)
             .commit()

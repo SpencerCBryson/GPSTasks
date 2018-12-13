@@ -6,6 +6,7 @@ import android.location.Location
 import android.location.LocationManager
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.content.res.ResourcesCompat
 import android.view.View
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.location.places.Place
@@ -61,14 +62,22 @@ class ConfigureTaskLocation : AppCompatActivity(), OnMapReadyCallback, PlaceSele
         latitude = latlng.latitude
     }
 
-    fun updateSelection() {
-        val center = mMap.cameraPosition.target
+    fun newCenter() = mMap.cameraPosition.target
+
+    fun newRadius() : Double {
         val projection = mMap.projection
 
         val left = location(projection.visibleRegion.nearLeft)
         val right = location(projection.visibleRegion.nearRight)
         val distance = left.distanceTo(right).toDouble()
         val radius = distance / 2 - (0.1 * distance)
+
+        return radius
+    }
+
+    fun updateSelection() {
+        val center = newCenter()
+        val radius = newRadius()
 
         updateCircle(center, radius)
     }
@@ -106,20 +115,21 @@ class ConfigureTaskLocation : AppCompatActivity(), OnMapReadyCallback, PlaceSele
 
         // Add a marker in Sydney and move the camera
         val sydney = LatLng(-34.0, 151.0)
+
+        mMap.setOnCameraIdleListener { updateSelection() }
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
-
-        val cOptions = CircleOptions().apply {
-            center(sydney)
-            radius(1000.0)
-        }
-
-        selection = mMap.addCircle(cOptions)
-        updateCircle(sydney, 1000.0)
-
         mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
         mMap.moveCamera(CameraUpdateFactory.zoomTo(10.0f))
 
-        mMap.setOnCameraMoveListener { updateSelection() }
+        val cOptions = CircleOptions().apply {
+            center(newCenter())
+            radius(newRadius())
+            fillColor(ResourcesCompat.getColor(resources, R.color.mapFill, null))
+            strokeColor(ResourcesCompat.getColor(resources, R.color.mapStroke, null))
+        }
 
+        selection = mMap.addCircle(cOptions)
+        mMap.setOnCameraMoveListener { updateSelection() }
+        mMap.setOnCameraIdleListener {  }
     }
 }

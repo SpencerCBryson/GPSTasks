@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
+import android.telephony.PhoneNumberUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -69,7 +70,7 @@ class MapPreview() : DialogFragment(), OnMapReadyCallback {
 }
 
 interface TextListener {
-    fun optionSelected(view : View, text : String)
+    fun optionSelected(view : View, text : String, phoneNumber : String)
 }
 
 class SMSActionFragment(val listener : TextListener) : DialogFragment() {
@@ -80,7 +81,9 @@ class SMSActionFragment(val listener : TextListener) : DialogFragment() {
 
         val button = v.findViewById<Button>(R.id.save_SMS)
         button.setOnClickListener {
-            listener.optionSelected(it, v.findViewById<EditText>(R.id.sms_content).text.toString())
+            val smsText = v.findViewById<EditText>(R.id.sms_content).text.toString()
+            val phoneNumberText = v.findViewById<EditText>(R.id.sms_number).text.toString()
+            listener.optionSelected(it, smsText, phoneNumberText)
         }
 
         return v
