@@ -8,16 +8,14 @@ import android.location.Location
 import android.util.Log
 
 
-var DATABASE_NAME = "TaskDB2"
+var DATABASE_NAME = "TaskDB3"
 var DATABASE_VERSION = 1
 
 var CREATE_TASK_TABLE = "CREATE TABLE TaskTable( id int primary key, taskName varchar(100) not null, enabled boolean);"
-var CREATE_STEP_TABLE = "CREATE TABLE StepTable( id int primary key, type int, data varchar(100) not null);"
-var CREATE_TASK_STEP_TABLE = "CREATE TABLE TaskStepsTable( taskID int, stepID int);"
+var CREATE_STEP_TABLE = "CREATE TABLE StepTable( id int primary key, type int, data varchar(100) not null, taskID int);"
 
 var TABLE_NAME1 = "TaskTable"
 var TABLE_NAME2 = "stepTable"
-var TABLE_NAME3 = "TaskStepsTable"
 
 var T1_COL_ID = "id"
 var T1_COL_NAME = "taskName"
@@ -26,9 +24,8 @@ var T1_COL_ENABLED = "enabled"
 var T2_COL_ID = "id"
 var T2_COL_TYPE = "type"
 var T2_COL_DATA = "data"
+var T2_COL_TASK = "taskID"
 
-var T3_COL_TASK = "taskID"
-var T3_COL_STEP = "stepID"
 
 class DBHelper(context: Context) : SQLiteOpenHelper(context,
     DATABASE_NAME, null,
@@ -37,7 +34,6 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context,
     override fun onCreate(db: SQLiteDatabase){
         db?.execSQL(CREATE_TASK_TABLE)
         db?.execSQL(CREATE_STEP_TABLE)
-        db?.execSQL(CREATE_TASK_STEP_TABLE)
     }
 
 
@@ -47,47 +43,34 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context,
 
     //TODO Implement Database Population
     fun populate(){
+
         //T1
-        insertTask(1, "task1")
-        insertTask(2, "task2")
+        insertTask("task1")
+        insertTask("task2")
 
         //T2
-        insertStep(1, 0, "DUMMYDATA1")
-        insertStep(2, 0, "DUMMYDATA2")
-        insertStep(3, 1, "DUMMYDATA3")
-        insertStep(4, 1, "DUMMYDATA4")
+        insertStep(1, "DUMMYDATA1", 1)
+        insertStep(1, "DUMMYDATA2", 1)
+        insertStep(1, "DUMMYDATA3", 2)
+        insertStep(1, "DUMMYDATA4", 2)
 
-        //T3
-        insertStepTask(1, 1)
-        insertStepTask(1, 2)
-        insertStepTask(2, 3)
-        insertStepTask(2, 4)
+
     }
 
-    fun insertTask(id: Int, task: String){
+    fun insertTask(task: String){
         val db = this.writableDatabase
         var cv = ContentValues()
-        cv.put(T1_COL_ID, id)
         cv.put(T1_COL_NAME, task)
         cv.put(T1_COL_ENABLED, true)
         db.insert(TABLE_NAME1, null, cv)
     }
 
-    fun insertStep(id: Int, type: Int, data: String){
+    fun insertStep(type: Int, data: String, taskID: Int){
         val db = this.writableDatabase
         var cv = ContentValues()
-        cv.put(T2_COL_ID, id)
         cv.put(T2_COL_TYPE, type)
         cv.put(T2_COL_DATA, data)
         db.insert(TABLE_NAME2, null, cv)
-    }
-
-    fun insertStepTask(task: Int, step: Int){
-        val db = this.writableDatabase
-        var cv = ContentValues()
-        cv.put(T3_COL_TASK, task)
-        cv.put(T3_COL_STEP, step)
-        db.insert(TABLE_NAME3, null, cv)
     }
 
     fun readTasks() : MutableList<TaskDataObj>{
@@ -125,28 +108,10 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context,
         return list
     }
 
-    fun readStepTasks() : MutableList<TaskStepDataObj>{
-        var list : MutableList<TaskStepDataObj> = ArrayList()
-        val db = this.readableDatabase
-        val query = "Select * from " + TABLE_NAME3
-        var result = db.rawQuery(query, null)
-        if(result.moveToFirst()){
-            do{
-                val task = result.getString(result.getColumnIndex(T3_COL_TASK)).toInt()
-                val step = result.getString(result.getColumnIndex(T3_COL_STEP)).toInt()
-                list.add(TaskStepDataObj(task, step))
-            }while(result.moveToNext())
-        }
-        result.close()
-        db.close()
-        return list
-    }
-
-
-    //TODO use tostring to insert steps once it's been implemented
     fun addTask(task: Task){
-        insertTask(task.id, task.title)
+        insertTask(task.title)
         task.steps.forEach{
+            //TODO MAKE THIS WORK
             //insertStep(it)
         }
     }
@@ -160,11 +125,11 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context,
         val data1 = db.rawQuery(query1, null)
         if(data1.moveToFirst()){
             do{
-                val query2 = "SELECT * FROM " + TABLE_NAME2 + " INNER JOIN " + TABLE_NAME3 + " ON " + TABLE_NAME2 + ".id = " + TABLE_NAME3 + ".stepID WHERE " + TABLE_NAME3 + ".taskID = " + data1.getString(data1.getColumnIndex(T1_COL_ID))
+                val query2 = "SELECT * FROM " + TABLE_NAME2 + " WHERE " + data1.getString(data1.getColumnIndex(T1_COL_ID)) + " = " + T2_COL_TASK
                 val data2 = db.rawQuery(query2, null)
                 if(data2.moveToFirst()){
                         do{
-                            stepList.add(makeStep(data2.getString(data2.getColumnIndex(T2_COL_ID)).toInt(), data2.getString(data2.getColumnIndex(T2_COL_TYPE)).toInt(), data2.getString(data2.getColumnIndex(T2_COL_DATA))))
+                            stepList.add(makeStep(data2.getString(data2.getColumnIndex(T2_COL_TYPE)).toInt(), data2.getString(data2.getColumnIndex(T2_COL_DATA))))
                         }while(data2.moveToNext())
                     }
                 list.add(Task(data1.getString(data1.getColumnIndex(T1_COL_NAME)), stepList, true))
@@ -173,7 +138,18 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context,
         return list
     }
 
-    fun makeStep(id: Int, type: Int, data: String) : Step{
+    fun makeStep(type: Int, data: String) : Step{
+            //Type 0 = Error
+        if(type == 0){
+            Log.d("nice", "ERROR")
+
+            //Type 1 = LocStep
+        }else if(type == 1){
+            val splitdata = data.split(",")
+            return LocStep(Location(splitdata[0]), splitdata[1].toDouble(), splitdata[2].toBoolean())
+        }
+
+        //Returning Dummy Data, occurs if error.
         return LocStep(Location(""), 100.0, true)
     }
 }

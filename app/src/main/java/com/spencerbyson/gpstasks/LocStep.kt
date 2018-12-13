@@ -22,6 +22,10 @@ class LocStep(val target : Location, val radius : Double, val withinRadius : Boo
             distance >= radius
     }
 
+    override fun toString() : String{
+        return target.toString() + "," +radius.toString() + "," + withinRadius.toString()
+    }
+
     override fun execute() {}
 }
 
