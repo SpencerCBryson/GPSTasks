@@ -3,6 +3,7 @@
     <string name="action_settings">Settings</string>
     <string name="addbutton">Add New</string>
     <string name="deletebutton">Delete</string>
+    <string name="donebutton">Done</string>
     <string name="tasknamefiller">Task 1</string>
     <string name="taskmenutitle">Tasks</string>
     <string name="configuretask">Configure Task</string>
