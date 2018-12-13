@@ -30,15 +30,18 @@ class Home : AppCompatActivity() {
     var taskList = ArrayList<Task>()
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        Log.d("nice", requestCode.toString() + resultCode.toString() + data.toString())
+        //Log.d("nice", requestCode.toString() + resultCode.toString() + data.toString())
 
+        Log.i(TAG, "res: $resultCode")
         if (requestCode == CREATE_TASK) {
-            val task = data!!.getParcelableExtra<Task>("task")
-            addTask(task)
-        } else if (requestCode == EDIT_TASK) {
-            val task = data!!.getParcelableExtra<Task>("task")
-            val oldTitle = data!!.getStringExtra("oldTitle")
-            updateTask(task, oldTitle)
+            if(resultCode == CREATE_TASK) {
+                val task = data!!.getParcelableExtra<Task>("task")
+                addTask(task)
+            } else if (resultCode == EDIT_TASK) {
+                val task = data!!.getParcelableExtra<Task>("task")
+                val oldTitle = data!!.getStringExtra("oldTitle")
+                updateTask(task, oldTitle)
+            }
         }
     }
 
@@ -118,41 +121,41 @@ class Home : AppCompatActivity() {
     }
 
     // code to test our task service
-    fun testingCode() {
-        val intent = Intent(this, TaskService::class.java)
-
-        // test lat & long
-        val lat = 43.945302
-        val long = -78.892388
-        val radius = 100.0 //metres
-
-        val testLoc = Location("")
-        testLoc.latitude = lat
-        testLoc.longitude = long
-
-        val steps = ArrayList<Step>()
-
-        val number = "+12898032117" //burner phone number from TextNow
-        val msg = "Turning into the school now, be there in a couple minutes."
-        val smsAction = SMSAction(number, msg)
-
-        val locStep = LocStep(testLoc, radius, true)
-        steps.add(locStep)
-        steps.add(smsAction)
-
-        val testTask = Task("Testing task", steps, true)
-
-        addTask(testTask)
-
-        intent.putExtra("TASKS", taskList)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(intent)
-        } else {
-            startService(intent)
-        }
-
-    }
+//    fun testingCode() {
+//        val intent = Intent(this, TaskService::class.java)
+//
+//        // test lat & long
+//        val lat = 43.945302
+//        val long = -78.892388
+//        val radius = 100.0 //metres
+//
+//        val testLoc = Location("")
+//        testLoc.latitude = lat
+//        testLoc.longitude = long
+//
+//        val steps = ArrayList<Step>()
+//
+//        val number = "+12898032117" //burner phone number from TextNow
+//        val msg = "Turning into the school now, be there in a couple minutes."
+//        val smsAction = SMSAction(number, msg)
+//
+//        val locStep = LocStep(testLoc, radius, true)
+//        steps.add(locStep)
+//        steps.add(smsAction)
+//
+//        val testTask = Task("Testing task", steps, true)
+//
+//        addTask(testTask)
+//
+//        intent.putExtra("TASKS", taskList)
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            startForegroundService(intent)
+//        } else {
+//            startService(intent)
+//        }
+//
+//    }
 
     fun launchService() {
         val intent = Intent(this, TaskService::class.java)
@@ -175,6 +178,8 @@ class Home : AppCompatActivity() {
     fun updateTask(task : Task, oldTitle : String) {
         val index = taskList.indexOfFirst { it.title == oldTitle }
         taskList[index] = task
+        Log.i(TAG, "update: $oldTitle, index: $index")
+        db.updateTask(task, oldTitle)
     }
 
     fun loadTasks(){

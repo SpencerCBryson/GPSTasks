@@ -73,12 +73,41 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context,
         db.insert(TABLE_NAME2, null, cv)
     }
 
+    fun updateOrInsertStep(type: Int, data: String, taskID: String, oldTitle: String){
+        val db = this.writableDatabase
+        var cv = ContentValues()
+
+        cv.put(T2_COL_TASK, taskID)
+        cv.put(T2_COL_TYPE, type)
+        cv.put(T2_COL_DATA, data)
+
+        val u = db.update(TABLE_NAME2, cv, "taskID=?", arrayOf(oldTitle))
+        if (u == 0)
+            db.insert(TABLE_NAME2, null, cv)
+    }
+
+
     fun addTask(task: Task){
         insertTask(task)
         task.steps.forEach{
             insertStep(it.type, it.toString(), task.title)
         }
     }
+
+    fun updateTask(task : Task, oldTitle : String) {
+        val db = this.writableDatabase
+        var cv = ContentValues()
+        cv.put(T1_COL_NAME, task.title)
+        cv.put(T1_COL_ENABLED, task.enabled)
+
+        db.update(TABLE_NAME1, cv, "taskName=?", arrayOf(oldTitle))
+
+        task.steps.forEach{
+            updateOrInsertStep(it.type, it.toString(), task.title, oldTitle)
+        }
+
+    }
+
 
     fun getTasks() : ArrayList<Task> {
         var list = ArrayList<Task>()
@@ -102,7 +131,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context,
                 val query2 = "SELECT * FROM $TABLE_NAME2 WHERE $T2_COL_TASK = \"$name\""
                 val data2 = db.rawQuery(query2, null) //steps
 
-                Log.i(TAG, "count: ${data2.count}")
+                //Log.i(TAG, "count: ${data2.count}")
 
                 if(data2.moveToFirst()){
                     do{
@@ -115,13 +144,13 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context,
                     }while(data2.moveToNext())
                 }
 
-                Log.i(TAG, "steps: ${stepList.size.toString()}")
+                //Log.i(TAG, "steps: ${stepList.size.toString()}")
                 val task = Task(name, stepList, enabled)
                 list.add(task)
             }while(data1.moveToNext())
         }
 
-        Log.i(TAG, list.size.toString())
+        //Log.i(TAG, list.size.toString())
 
         return list
     }

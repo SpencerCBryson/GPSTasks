@@ -83,8 +83,10 @@ class AddTask : AppCompatActivity(), TaskBuilderRecyclerAdapter.PreviewListener,
 
         data.putExtra("task", task)
 
+        Log.i(TAG, editMode.toString())
+
         if(editMode) {
-            data.putExtra("oldTitle",   oldTask!!.title)
+            data.putExtra("oldTitle", oldTask!!.title)
             setResult(2, data)
         } else {
             setResult(1, data)
@@ -107,7 +109,7 @@ class AddTask : AppCompatActivity(), TaskBuilderRecyclerAdapter.PreviewListener,
 
             Log.i(TAG, task.steps.size.toString())
 
-            task.steps.forEach { Log.i(TAG, it.toString())}
+            task.steps.forEach { currentSteps.add(it)}
 
             oldTask = task
         }
