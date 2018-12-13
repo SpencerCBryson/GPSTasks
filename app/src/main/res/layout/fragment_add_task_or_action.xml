@@ -43,5 +43,17 @@
             android:layout_height="wrap_content" android:id="@+id/send_SMS"
             android:onClick="optionSelected"
             android:drawableLeft="@android:drawable/ic_dialog_email"/>
+    <View
+            android:id="@+id/divider3"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider"
+    />
+    <TextView
+            android:text="@string/play_music"
+            android:layout_width="match_parent"
+            android:drawableLeft="@android:drawable/ic_media_play"
+            android:onClick="optionSelected"
+            android:layout_height="wrap_content" android:id="@+id/play_music"/>
 
 </LinearLayout>

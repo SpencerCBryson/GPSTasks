@@ -83,6 +83,7 @@ class SMSActionFragment(val listener : TextListener) : DialogFragment() {
         button.setOnClickListener {
             val smsText = v.findViewById<EditText>(R.id.sms_content).text.toString()
             val phoneNumberText = v.findViewById<EditText>(R.id.sms_number).text.toString()
+
             listener.optionSelected(it, smsText, phoneNumberText)
         }
 

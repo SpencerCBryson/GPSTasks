@@ -8,7 +8,7 @@ import android.location.Location
 import android.util.Log
 
 
-var DATABASE_NAME = "TaskDB"
+var DATABASE_NAME = "TaskDB6"
 var DATABASE_VERSION = 1
 
 var CREATE_TASK_TABLE = "CREATE TABLE TaskTable( id int primary key, taskName varchar(100) not null, enabled boolean);"

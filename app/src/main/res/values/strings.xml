@@ -16,4 +16,5 @@
     <string name="action_text">Actions</string>
     <string name="entered_area_text">Entered Area</string>
     <string name="sms_text">Send SMS</string>
+    <string name="play_music">Play Music</string>
 </resources>

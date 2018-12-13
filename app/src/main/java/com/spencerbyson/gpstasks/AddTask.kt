@@ -1,6 +1,7 @@
 package com.spencerbyson.gpstasks
 
 import android.content.Intent
+import android.media.MediaPlayer
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -62,6 +63,13 @@ class AddTask : AppCompatActivity(), TaskBuilderRecyclerAdapter.PreviewListener,
 
                 fm.add(selectionFragment!!, "SMS")
                     .commit()
+            }
+            R.id.play_music -> {
+                supportFragmentManager.beginTransaction()
+                    .remove(selectionFragment!!)
+                    .commit()
+                currentSteps.add(AudioAction(view.context))
+                rv.adapter!!.notifyItemInserted(currentSteps.size)
             }
         }
     }
