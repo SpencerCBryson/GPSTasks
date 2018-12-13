@@ -1,5 +1,6 @@
 package com.spencerbyson.gpstasks
 
+import android.location.Location
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -19,7 +20,8 @@ class TaskBuilderRecyclerAdapter(val taskList: ArrayList<Step>): RecyclerView.Ad
         val step = taskList[position]
         holder.title.text = step.type.toString()
         holder.preview.setOnClickListener {
-            listener?.startMapPreview()
+            if (step is LocStep)
+                listener?.startMapPreview()
         }
 
 //        holder.itemView.setOnClickListener{

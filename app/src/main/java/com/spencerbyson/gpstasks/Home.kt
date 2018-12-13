@@ -173,6 +173,11 @@ class Home : AppCompatActivity() {
         taskList.add(taskList.size, task)
         rv.adapter!!.notifyItemInserted(taskList.size)
         db.addTask(task)
+        val intent = Intent(this, TaskService::class.java)
+
+        stopService(intent)
+        launchService()
+
     }
 
     fun updateTask(task : Task, oldTitle : String) {

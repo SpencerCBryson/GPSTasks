@@ -29,10 +29,11 @@ class Task(var title : String, var steps : @RawValue ArrayList<Step>, var enable
             } else if (it is SMSAction) {
                 System.out.println("############# doing action")
                 it.execute()
+                it.finished = true
             }
         }
 
-        resetSteps()
+//        resetSteps()
     }
 
     fun resetSteps() {
