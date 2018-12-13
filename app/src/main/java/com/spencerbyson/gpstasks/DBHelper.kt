@@ -41,9 +41,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context,
 
     }
 
-    //TODO Implement Database Population
     fun populate(){
-
         val loc = Location("")
         loc.latitude = 10.0
         loc.longitude = 10.0
@@ -72,7 +70,6 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context,
     fun addTask(task: Task){
         insertTask(task.title)
         task.steps.forEach{
-            //TODO MAKE THIS WORK
             insertStep(it.type, it.toString(), task.id)
         }
     }
@@ -115,5 +112,11 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context,
 
         //Returning Dummy Data, occurs if error.
         return LocStep(Location(""), 100.0, true)
+    }
+
+    fun changeTaskState(id: Int, newState: Boolean){
+        val db = this.writableDatabase
+        val query1 = "UPDATE TaskTable SET enabled = " + newState + " WHERE id = " + id.toString()
+        val data1 = db.rawQuery(query1, null)
     }
 }

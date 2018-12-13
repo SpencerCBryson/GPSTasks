@@ -40,10 +40,10 @@
             android:layout_marginStart="84dp" app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginBottom="8dp"/>
     <Button
-            android:text="Done"
+            android:text="@string/donebutton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/button2" android:layout_marginEnd="84dp" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="8dp"
-            android:onClick="finishTaskBuilder"/>
+            android:onClick="finishTaskBuilder" android:background="@drawable/button"/>
 </android.support.constraint.ConstraintLayout>
