@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.*
 import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.TextView
 import kotlinx.android.synthetic.main.sms_action.*
 
 class AddTask : AppCompatActivity(), TaskBuilderRecyclerAdapter.PreviewListener, TextListener {
@@ -70,7 +71,8 @@ class AddTask : AppCompatActivity(), TaskBuilderRecyclerAdapter.PreviewListener,
     }
 
     fun finishTaskBuilder(view : View) {
-        val task = Task("test", currentSteps, true)
+        val title = findViewById<TextView>(R.id.mtaskNameTxt).text.toString()
+        val task = Task(title, currentSteps, true)
         val data = Intent()
         data.putExtra("task", task)
 

@@ -45,7 +45,7 @@ class ConfigureTaskLocation : AppCompatActivity(), OnMapReadyCallback, PlaceSele
 
     override fun onPlaceSelected(place : Place?) {
         val cameraUpdate = CameraPosition.builder()
-            .zoom(10.0f)
+            .zoom(20.0f)
             .target(place?.latLng)
             .build()
 

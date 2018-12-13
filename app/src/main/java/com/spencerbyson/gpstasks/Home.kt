@@ -25,6 +25,7 @@ class Home : AppCompatActivity() {
     val CREATE_TASK = 1
 
     lateinit var rv : RecyclerView
+    lateinit var db : DBHelper
     var taskList = ArrayList<Task>()
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -40,11 +41,13 @@ class Home : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        updateTasks()
+        db = DBHelper(this)
 
 
         // get permissions, all are required to make the app function correctly
         getPerms()
+
+        updateTasks()
 
         rv = findViewById(R.id.mRecyclerView)
         rv.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
@@ -57,8 +60,8 @@ class Home : AppCompatActivity() {
         }
 
 
-        if(permsGranted)
-            testingCode()
+//        if(permsGranted)
+//            testingCode()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -149,11 +152,11 @@ class Home : AppCompatActivity() {
     fun addTask(task : Task) {
         taskList.add(taskList.size, task)
         rv.adapter!!.notifyItemInserted(taskList.size)
+        db.addTask(task)
     }
 
     fun updateTasks(){
-        var db = DBHelper(this)
-        db.populate()
+        //db.populate()
         var tasks = db.getTasks()
         taskList = tasks
     }
